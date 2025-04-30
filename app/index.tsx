@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { Ionicons } from '@expo/vector-icons'; // <<== Importing Icon Library
-import { auth, database } from '../firebaseConfig'; 
+import { auth, database } from '../firebaseConfig';
 import { ref, get } from 'firebase/database';
 
 export default function WelcomeScreen() {
   const [userName, setUserName] = useState('');
   const [lastLogin, setLastLogin] = useState('');
   const navigation = useNavigation(); 
+
+  useLayoutEffect(() => {
+    navigation.setOptions({ headerShown: false });
+  }, [navigation]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -51,12 +54,18 @@ export default function WelcomeScreen() {
         </Text>
 
         <TouchableOpacity 
-          style={styles.iconButton} 
+          style={styles.button} 
           onPress={() => navigation.navigate('login')}
         >
-          <Ionicons name="home" size={40} color="#fff" />
+          <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity 
+          style={styles.button} 
+          onPress={() => navigation.navigate('signup')}
+        >
+          <Text style={styles.buttonText}>Signup</Text>
+        </TouchableOpacity>
       </View>
     </ImageBackground>
   );
@@ -70,7 +79,7 @@ const styles = StyleSheet.create({
   },
   container: {
     padding: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.6)', 
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     borderRadius: 10,
     alignItems: 'center',
     width: '85%',
@@ -91,10 +100,18 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-  iconButton: {
+  button: {
     backgroundColor: '#4CAF50',
-    padding: 14,
-    borderRadius: 50,
-    marginTop: 30,
+    paddingVertical: 12,
+    paddingHorizontal: 30,
+    borderRadius: 5,
+    marginTop: 20,
+    width: '80%',
+    alignItems: 'center',
+  },
+  buttonText: {
+    fontSize: 18,
+    color: '#fff',
+    fontWeight: 'bold',
   },
 });
