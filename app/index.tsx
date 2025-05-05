@@ -1,36 +1,32 @@
-import React, { useEffect, useState, useLayoutEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ImageBackground, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
 import { auth, database } from '../firebaseConfig';
 import { ref, get } from 'firebase/database';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useRouter } from 'expo-router';
 
 export default function WelcomeScreen() {
   const [userName, setUserName] = useState('');
   const [lastLogin, setLastLogin] = useState('');
-  const navigation = useNavigation(); 
-
-  useLayoutEffect(() => {
-    navigation.setOptions({ headerShown: false });
-  }, [navigation]);
+  const router = useRouter();
 
   useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const user = auth.currentUser;
-        if (user) {
+    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        try {
           const snapshot = await get(ref(database, `users/${user.uid}`));
           if (snapshot.exists()) {
             const userData = snapshot.val();
             setUserName(userData.email?.split('@')[0] || 'User');
             setLastLogin(userData.lastLogin || 'Unknown');
           }
+        } catch (error) {
+          console.log('Error fetching user data:', error);
         }
-      } catch (error) {
-        console.log('Error fetching user data:', error);
       }
-    };
+    });
 
-    fetchUserData();
+    return () => unsubscribe();
   }, []);
 
   const getGreeting = () => {
@@ -55,14 +51,14 @@ export default function WelcomeScreen() {
 
         <TouchableOpacity 
           style={styles.button} 
-          onPress={() => navigation.navigate('login')}
+          onPress={() => router.push('/login')}
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
           style={styles.button} 
-          onPress={() => navigation.navigate('signup')}
+          onPress={() => router.push('/signup')}
         >
           <Text style={styles.buttonText}>Signup</Text>
         </TouchableOpacity>

@@ -23,7 +23,7 @@ export default function LoginScreen() {
       Alert.alert(
         'Success',
         `Welcome ${user.email}`,
-        [{ text: 'OK', onPress: () => router.replace('/welcome') }],
+        [{ text: 'OK', onPress: () => router.replace('./(tabs)/tabHome') }],
         { cancelable: false }
       );
     } catch (error: any) {
