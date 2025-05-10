@@ -1,6 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getDatabase } from 'firebase/database';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBL90H7W4RQSpMdVjPLsq4qjcxUH6JnmAY",
@@ -9,11 +10,11 @@ const firebaseConfig = {
   storageBucket: "women-safety-ff6f2.appspot.com",
   messagingSenderId: "621246185666",
   appId: "1:621246185666:web:21158a234dbcd9d39f7b5b",
-  databaseURL: 'https://women-safety-6f2-default-rtdb.asia-southeast1.firebasedatabase.app/' 
+  databaseURL: "https://women-safety-ff6f2-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
 const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
-export const database = getDatabase(app); 
-
+export const database = getDatabase(app);
+export const firestore = getFirestore(app);

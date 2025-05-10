@@ -9,9 +9,11 @@ export default function SignupScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [name, setName] = useState('');
+  const [phone, setPhone] = useState('');
+  const [dob, setDob] = useState('');
 
   const handleSignup = async () => {
-    if (!email || !password || !name) {
+    if (!email || !password || !name || !phone || !dob) {
       Alert.alert('Error', 'Please fill out all fields.');
       return;
     }
@@ -24,22 +26,20 @@ export default function SignupScreen() {
         uid: user.uid,
         name: name,
         email: user.email,
+        phone: phone,
+        dob: dob,
+        username: name.toLowerCase().replace(/\s+/g, '') + Math.floor(Math.random() * 1000),
+        joined: new Date().toDateString(),
         createdAt: new Date().toISOString(),
       });
 
-      // Log to make sure we reach this point
-      console.log('Account created:', user);
-
-      // Display the success message
       Alert.alert('Success', 'Account created!', [
         {
           text: 'OK',
           onPress: () => {
-            console.log('Navigating to home screen');
-            // Add a small delay to ensure alert is shown before navigation
             setTimeout(() => {
-              router.replace('/');
-            }, 1000); // Adjust the timeout as needed
+              router.replace('/login');
+            }, 1000);
           },
         },
       ]);
@@ -56,6 +56,19 @@ export default function SignupScreen() {
         placeholder="Name"
         value={name}
         onChangeText={setName}
+        style={styles.input}
+      />
+      <TextInput
+        placeholder="Phone Number"
+        value={phone}
+        onChangeText={setPhone}
+        style={styles.input}
+        keyboardType="phone-pad"
+      />
+      <TextInput
+        placeholder="Date of Birth (e.g. 15 March 1995)"
+        value={dob}
+        onChangeText={setDob}
         style={styles.input}
       />
       <TextInput
